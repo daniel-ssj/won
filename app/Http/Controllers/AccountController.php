@@ -18,9 +18,14 @@ class AccountController extends Controller
 
     public function accountDetail($id) {
         $account = Account::all()->find($id);
-        $transactions = $account->transactions()->latest()->paginate(8);
+        $transactions = $account->transactions()->latest()->paginate(10);
+        $spendingByCategory = Transactions::selectRaw('category, sum(amount) as amount')->where('account_id', '=', $id)
+            ->where('isIncome', '=', '0')->groupBy('category')->get();
 
-        return view('accounts.detail', compact('account', 'transactions'));
+        $expenses = $account->transactions()->selectRaw('sum(amount) as expenses')->where('isIncome', '=', '0')->get();
+        $income = $account->transactions()->selectRaw('sum(amount) as income')->where('isIncome', '=', '1')->get();
+
+        return view('accounts.detail', compact('account', 'transactions', 'spendingByCategory', 'expenses', 'income'));
     }
 
     public function addAccount(Request $request) {
