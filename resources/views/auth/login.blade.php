@@ -19,9 +19,19 @@
                         @csrf
 
                         <label class="font-semibold text-sm text-gray-600 pb-1 block">E-mail</label>
+                        @if ($errors->has('email'))
+                            <span class="text-red-500">
+                                {{ $errors->first('email') }}
+                            </span>
+                        @endif
                         <input type="email" id="email" name="email"
                             class="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full" />
                         <label class="font-semibold text-sm text-gray-600 pb-1 block">Senha</label>
+                        @if ($errors->has('password'))
+                            <span class="text-red-500">
+                                {{ $errors->first('password') }}
+                            </span>
+                        @endif
                         <input type="password" id="password" name="password"
                             class="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full" />
                         <button type="submit"
