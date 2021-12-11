@@ -31,4 +31,6 @@ Route::prefix('accounts')->group(function() {
     Route::get('/all', [AccountController::class, 'listAccounts'])->name('listAccounts');
     Route::get('/detail/{id}', [AccountController::class, 'accountDetail'])->name('accountDetail');
     Route::post('/add', [AccountController::class, 'addAccount'])->name('addAccount');
+    Route::get('/{id}/add-transaction', [AccountController::class, 'addTransaction'])->name('addTransaction');
+    Route::post('/add-transaction-done', [AccountController::class, 'addTransactionDone'])->name('addTransactionDone');
 });

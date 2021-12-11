@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
+use App\Models\Transactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
@@ -17,7 +18,7 @@ class AccountController extends Controller
 
     public function accountDetail($id) {
         $account = Account::all()->find($id);
-        $transactions = $account->transactions;
+        $transactions = $account->transactions()->latest()->paginate(8);
 
         return view('accounts.detail', compact('account', 'transactions'));
     }
@@ -39,5 +40,43 @@ class AccountController extends Controller
         ]);
 
         return Redirect()->back()->with('success', 'Account created succesfully');
+    }
+
+    public function addTransaction(Request $request, $id) {
+        $isIncome = $request->query('inc');
+        return view('accounts.add-transaction', compact('id', 'isIncome'));
+    }
+
+    public function addTransactionDone(Request $request) {
+        $validatedData = $request->validate([
+            'category' => 'required|max:191',
+            'amount' => 'required|integer|min:0'
+        ], [
+            'account_name.required' => 'Categoria não pode ser vazio',
+            'account_name.max' => 'Nome da conta não pode exceder 191 caracteres'
+        ]);
+
+        Transactions::insert([
+            'category' => $request->category,
+            'amount' => $request->amount,
+            'account_id' => $request->account_id,
+            'isIncome' => $request->is_income,
+            'created_at' => Carbon::now()
+        ]);
+
+        $account = Account::find($request->account_id);
+        $currentBalance = $account->balance;
+
+        if($request->is_income == 1) {
+            $account->update([
+                'balance' => $currentBalance + $request->amount
+            ]);
+        } else {
+            $account->update([
+                'balance' => $currentBalance - $request->amount
+            ]);
+        }
+
+        return Redirect()->route('accountDetail', $request->account_id)->with('success', 'Transação inserida com sucesso');
     }
 }

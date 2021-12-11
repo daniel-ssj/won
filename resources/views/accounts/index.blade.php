@@ -2,7 +2,7 @@
 
 @section('main')
     <div class="container flex flex-col justify-start mt-8 mx-auto">
-        <div class="bg-white w-1/3 p-5">
+        <div class="bg-white lg:w-1/3 p-5">
             @if (session('success'))
                 <div class="alert alert-success mb-2" role="alert">
                     {{ session('success') }}
@@ -36,7 +36,7 @@
         </div>
     </div>
     @foreach ($accounts as $a)
-        <a href="{{ url('accounts/detail/'.$a->id) }}">
+        <a href="{{ url('accounts/detail/' . $a->id) }}">
 
             <div class="container flex justify-around items-center bg-white p-5 mt-6 mx-auto">
                 <div
