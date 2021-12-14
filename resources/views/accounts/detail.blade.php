@@ -37,51 +37,53 @@
         </div>
     </div>
     <div class="container mx-auto">
-        <div class="class flex items-center justify-between bg-white bg-white p-5">
-            <div class="w-72 h-72">
-                <canvas id="myChart"></canvas>
-            </div>
-            <div class="flex-col p-5">
-                Gastos
-                <div>
-                    <span class="text-red-500 text-xl font-bold">R${{ $expenses[0]->expenses }}</span>
+        @if ($expenses[0]->expenses != 0)
+            <div class="class flex items-center justify-between bg-white bg-white p-5">
+                <div class="w-72 h-72">
+                    <canvas id="myChart"></canvas>
                 </div>
-                Entradas
-                <div>
-                    <span class="text-green-500 text-xl font-bold">R${{ $income[0]->income }}</span>
+                <div class="flex-col p-5">
+                    Gastos
+                    <div>
+                        <span class="text-red-500 text-xl font-bold">R${{ $expenses[0]->expenses }}</span>
+                    </div>
+                    Entradas
+                    <div>
+                        <span class="text-green-500 text-xl font-bold">R${{ $income[0]->income }}</span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <script>
-            const ctx = document.getElementById('myChart').getContext('2d');
-            const _data = @json($spendingByCategory)
+            <script>
+                const ctx = document.getElementById('myChart').getContext('2d');
+                const _data = @json($spendingByCategory)
 
-            let categories = []
-            let amounts = []
+                let categories = []
+                let amounts = []
 
-            for (category of _data) {
-                categories.push(category.category)
-                amounts.push(category.amount)
-            }
-
-            const myChart = new Chart(ctx, {
-                type: 'doughnut',
-                responsive: true,
-                data: {
-                    labels: categories,
-                    datasets: [{
-                        label: 'Gastos por categoria',
-                        data: amounts,
-                        backgroundColor: [
-                            'rgb(255, 99, 132)',
-                            'rgb(54, 162, 235)',
-                            'rgb(255, 205, 86)'
-                        ],
-                        hoverOffset: 4
-                    }]
+                for (category of _data) {
+                    categories.push(category.category)
+                    amounts.push(category.amount)
                 }
-            });
-        </script>
+
+                const myChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    responsive: true,
+                    data: {
+                        labels: categories,
+                        datasets: [{
+                            label: 'Gastos por categoria',
+                            data: amounts,
+                            backgroundColor: [
+                                'rgb(255, 99, 132)',
+                                'rgb(54, 162, 235)',
+                                'rgb(255, 205, 86)'
+                            ],
+                            hoverOffset: 4
+                        }]
+                    }
+                });
+            </script>
+        @endif
         <h1 class="text-pink-500 text-2xl font-bold">Histórico</h1>
     </div>
     @foreach ($transactions as $t)
