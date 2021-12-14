@@ -13,8 +13,8 @@
                 Olá, {{ Auth::user()->name }}
             </h2>
             <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-                @if (empty($accounts))
-                    Criar conta
+                @if ($accounts->isEmpty())
+                    <a href="{{ url('accounts/all/') }}" class="text-blue-500">Criar conta</a>
                 @endif
                 @foreach ($accounts as $a)
                     <a href="{{ url('accounts/detail/' . $a->id) }}">

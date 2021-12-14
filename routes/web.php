@@ -19,6 +19,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('index')->middleware('auth');
 
+Route::get('/dashboard', function() {
+    return redirect('/');
+});
+
 Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 
 // Account routes

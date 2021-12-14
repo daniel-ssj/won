@@ -18,6 +18,11 @@ class AccountController extends Controller
 
     public function accountDetail($id) {
         $account = Account::all()->find($id);
+
+        if($account->user_id != Auth::user()->id) {
+            return redirect()->back();
+        }
+
         $transactions = $account->transactions()->latest()->paginate(10);
         $spendingByCategory = Transactions::selectRaw('category, sum(amount) as amount')->where('account_id', '=', $id)
             ->where('isIncome', '=', '0')->groupBy('category')->get();
